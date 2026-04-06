@@ -72,7 +72,7 @@ export default function Hero() {
                       gap-12 md:gap-20">
 
         {/* ── Left: text ─────────────────────────────────────────────────── */}
-        <div className="flex-1 min-w-0 text-left">
+        <div className="flex-1 min-w-0 flex flex-col items-center md:items-start text-center md:text-left">
           {/* Eyebrow */}
           <p
             ref={metaRef}
@@ -99,7 +99,7 @@ export default function Hero() {
           </p>
 
           {/* CTAs */}
-          <div ref={ctaRef} className="mt-10 flex flex-wrap gap-4 justify-start opacity-0">
+          <div ref={ctaRef} className="mt-10 flex flex-wrap gap-4 justify-center md:justify-start opacity-0">
             <a href="#projects" className="btn-primary">View Projects</a>
             <a href="/Nakulan_Resume.pdf" target="_blank" rel="noopener noreferrer" className="btn-ghost">View CV</a>
           </div>

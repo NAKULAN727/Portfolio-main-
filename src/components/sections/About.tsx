@@ -55,7 +55,7 @@ export default function About() {
       <div className="flex flex-col md:flex-row items-center justify-between gap-16 md:gap-20">
         
         {/* Left Side: Text Content */}
-        <div className="flex-1 flex flex-col items-start w-full max-w-xl text-left">
+        <div className="flex-1 flex flex-col items-center md:items-start w-full max-w-xl text-center md:text-left">
           <motion.h3 
             className="text-4xl md:text-5xl font-bold mb-3"
             variants={fadeUp} custom={1} initial="hidden" whileInView="visible" viewport={{ once: true }}
@@ -87,7 +87,7 @@ export default function About() {
           </motion.div>
           
           <motion.div 
-            className="flex flex-wrap gap-4 mt-auto"
+            className="flex flex-wrap gap-4 mt-auto justify-center md:justify-start"
             variants={fadeUp} custom={4} initial="hidden" whileInView="visible" viewport={{ once: true }}
           >
             <a href="#projects" className="btn-primary">View My Work</a>

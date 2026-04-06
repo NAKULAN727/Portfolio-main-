@@ -26,6 +26,7 @@ const projects = [
     ],
     tech: ["React.js", "Node.js", "Express.js", "Whisper", "BrowserAPI", "MongoDB Atlas"],
     color: "#10b981", link: "https://github.com/Saravana-creator/ncert_2",
+    image: "/aclc.png"
   },
   {
     title: "IntelliDoc\nParser",
@@ -35,8 +36,13 @@ const projects = [
       "OCR for text extraction, vector search with ChromaDB, conversational Streamlit interface.",
       "Enables intelligent document parsing and querying.",
     ],
-    tech: ["Python", "Streamlit", "ChromaDB", "Sentence-Transformers", "Flan-T5", "Tesseract OCR", "TinyDB"],
+    tech: {
+      "AI & Data Processing": ["PYTHON", "CHROMADB", "SENTENCE-TRANSFORMERS", "FLAN-T5", "RANK-BM25", "TESSERACT OCR", "TINYDB"],
+      "Backend & API": ["FASTAPI", "UVICORN", "SQLALCHEMY", "PASSLIB"],
+      "Frontend UI": ["NEXT.JS", "REACT", "TAILWIND CSS", "FRAMER MOTION"]
+    },
     color: "#f59e0b", link: "https://github.com/NAKULAN727/Intel-proj",
+    image: "/intellidoc.png"
   },
   {
     title: "EduChain",
@@ -48,6 +54,7 @@ const projects = [
     ],
     tech: ["HTML", "CSS", "MongoDB", "Solidity", "Ethereum Test-net"],
     color: "#7c3aed", link: "https://github.com/Saravana-creator/VIT_HACKATHON",
+    image: "/educhain.png"
   },
 ];
 
@@ -88,9 +95,13 @@ export default function Projects() {
               ref={(el) => { if (el) cardsRef.current[i] = el; }}
               className={`flex flex-col md:flex-row gap-8 items-center ${i % 2 !== 0 ? "md:flex-row-reverse" : ""}`}
             >
-              {/* 3-D cube */}
-              <div className="w-full md:w-64 h-64 flex-shrink-0 animate-float">
-                <ProjectCanvas title={p.title} color={p.color} />
+              {/* Image / 3D Canvas */}
+              <div className="w-full md:w-80 h-64 flex-shrink-0 relative rounded-lg overflow-hidden border flex items-center justify-center p-2" style={{ borderColor: `var(--c-border)`, background: 'var(--c-surface)' }}>
+                {p.image ? (
+                  <img src={p.image} alt={p.title} className="w-full h-full object-contain grayscale hover:grayscale-0 transition-all duration-500 rounded-md" />
+                ) : (
+                  <ProjectCanvas title={p.title} color={p.color} />
+                )}
               </div>
 
               {/* Card */}
@@ -126,17 +137,52 @@ export default function Projects() {
                 </ul>
 
                 {/* Tech chips */}
-                <div className="flex flex-wrap gap-2">
-                  {p.tech.map((t) => (
-                    <span
-                      key={t}
-                      className="font-mono text-[10px] px-2.5 py-1 rounded-sm border uppercase tracking-wider"
-                      style={{ color: "var(--c-muted)", borderColor: "var(--c-border)", background: "var(--c-surface)" }}
-                    >
-                      {t}
-                    </span>
-                  ))}
-                </div>
+                {Array.isArray(p.tech) ? (
+                  <div className="flex flex-wrap gap-2">
+                    {p.tech.map((t) => (
+                      <span
+                        key={t}
+                        className="font-mono text-[10px] px-2.5 py-1 rounded-sm border uppercase tracking-wider"
+                        style={{ color: "var(--c-muted)", borderColor: "var(--c-border)", background: "var(--c-surface)" }}
+                      >
+                        {t}
+                      </span>
+                    ))}
+                  </div>
+                ) : (
+                  <div className="flex flex-col gap-3 mt-2">
+                    {Object.entries(p.tech).map(([category, skills]) => (
+                      <div key={category} className="space-y-2 flex flex-col items-start border-l-2 pl-3" style={{ borderLeftColor: `${p.color}40` }}>
+                        <span className="text-[10px] font-mono tracking-widest uppercase" style={{ color: "var(--c-muted)" }}>{category}</span>
+                        <div className="flex flex-wrap gap-2">
+                          {(skills as string[]).map((t) => (
+                            <span
+                              key={t}
+                              className="font-mono text-[9px] px-2.5 py-1 rounded-full border uppercase tracking-wider transition-all duration-300"
+                              style={{ 
+                                color: "var(--c-muted)", 
+                                borderColor: "var(--c-border)", 
+                                background: "rgba(0,0,0,0.2)"
+                              }}
+                              onMouseEnter={(e) => {
+                                e.currentTarget.style.borderColor = p.color;
+                                e.currentTarget.style.color = p.color;
+                                e.currentTarget.style.boxShadow = `0 0 8px ${p.color}33`;
+                              }}
+                              onMouseLeave={(e) => {
+                                e.currentTarget.style.borderColor = "var(--c-border)";
+                                e.currentTarget.style.color = "var(--c-muted)";
+                                e.currentTarget.style.boxShadow = "none";
+                              }}
+                            >
+                              {t}
+                            </span>
+                          ))}
+                        </div>
+                      </div>
+                    ))}
+                  </div>
+                )}
 
                 <a
                   href={p.link}
