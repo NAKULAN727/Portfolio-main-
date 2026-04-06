@@ -5,9 +5,9 @@ import { Sphere, Html } from "@react-three/drei";
 import * as THREE from "three";
 
 const nodes = [
-  { label: "LinkedIn", url: "https://linkedin.com/in/your-profile", position: [1.1, 0.4, 0.6] as [number, number, number], color: "#0a66c2" },
-  { label: "GitHub", url: "https://github.com/your-username", position: [-0.8, 0.8, 0.7] as [number, number, number], color: "#e2e8f0" },
-  { label: "Email", url: "mailto:your@email.com", position: [0.2, -1.1, 0.5] as [number, number, number], color: "#f59e0b" },
+  { label: "LinkedIn", url: "https://www.linkedin.com/in/nakulan-s-v-4b5093315/", position: [1.1, 0.4, 0.6] as [number, number, number], color: "#0a66c2" },
+  { label: "GitHub",   url: "https://github.com/NAKULAN727",                       position: [-0.8, 0.8, 0.7] as [number, number, number], color: "#e2e8f0" },
+  { label: "Email",    url: "mailto:nakulan07022007@gmail.com",                    position: [0.2, -1.1, 0.5] as [number, number, number], color: "#f59e0b" },
 ];
 
 function GlobeNode({ label, url, position, color }: (typeof nodes)[0]) {

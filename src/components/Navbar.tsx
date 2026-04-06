@@ -2,30 +2,71 @@
 import { useState, useEffect } from "react";
 import { motion } from "framer-motion";
 
-const links = ["About", "Skills", "Projects", "Achievements", "Contact"];
+const LINKS = ["About", "Skills", "Projects", "Achievements", "Contact"];
 
 export default function Navbar() {
-  // Don't animate until after hydration — avoids server/client style mismatch
   const [mounted, setMounted] = useState(false);
-  useEffect(() => setMounted(true), []);
+  const [active, setActive]   = useState("");
+
+  useEffect(() => {
+    setMounted(true);
+    const onScroll = () => {
+      const current = LINKS.find((l) => {
+        const el = document.getElementById(l.toLowerCase());
+        if (!el) return false;
+        const { top } = el.getBoundingClientRect();
+        return top <= 120 && top > -el.offsetHeight + 120;
+      });
+      if (current) setActive(current);
+    };
+    window.addEventListener("scroll", onScroll, { passive: true });
+    return () => window.removeEventListener("scroll", onScroll);
+  }, []);
 
   return (
     <motion.nav
-      className="fixed top-0 left-0 right-0 z-50 flex justify-between items-center px-8 py-4 bg-dark/80 backdrop-blur-md border-b border-white/5"
-      initial={mounted ? { y: -60, opacity: 0 } : false}
-      animate={mounted ? { y: 0, opacity: 1 } : undefined}
-      transition={{ duration: 0.6, ease: "easeOut" }}
+      className="fixed top-0 inset-x-0 z-50 flex justify-between items-center
+                 px-8 py-4 border-b"
+      style={{
+        background: "rgba(8,10,15,0.85)",
+        backdropFilter: "blur(16px)",
+        borderColor: "var(--c-border)",
+      }}
+      initial={mounted ? { y: -64, opacity: 0 } : false}
+      animate={mounted ? { y: 0,   opacity: 1 } : undefined}
+      transition={{ duration: 0.55, ease: [0.16, 1, 0.3, 1] }}
     >
-      <span className="font-black text-xl text-primary">N.</span>
-      <ul className="hidden md:flex gap-8 text-sm text-slate-400">
-        {links.map((l) => (
-          <li key={l}>
-            <a href={`#${l.toLowerCase()}`} className="hover:text-white transition-colors">
+      {/* Logo */}
+      <a href="#hero" className="heading-display text-2xl text-teal tracking-widest">
+        NAK<span className="text-white">ULAN</span>
+      </a>
+
+      {/* Links */}
+      <ul className="hidden md:flex gap-8">
+        {LINKS.map((l) => (
+          <li key={l} className="relative">
+            <a
+              href={`#${l.toLowerCase()}`}
+              className={`font-mono text-xs tracking-widest uppercase transition-colors duration-200
+                ${active === l ? "text-teal" : "text-muted hover:text-white"}`}
+            >
               {l}
             </a>
+            {active === l && (
+              <motion.div
+                layoutId="nav-indicator"
+                className="absolute -bottom-1 left-0 right-0 h-px"
+                style={{ background: "var(--c-teal)" }}
+              />
+            )}
           </li>
         ))}
       </ul>
+
+      {/* CTA */}
+      <a href="mailto:nakulan07022007@gmail.com" className="btn-ghost hidden md:inline-flex text-xs py-2 px-4">
+        Hire Me
+      </a>
     </motion.nav>
   );
 }

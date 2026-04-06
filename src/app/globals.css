@@ -1,30 +1,207 @@
+@import url("https://fonts.googleapis.com/css2?family=Bebas+Neue&family=Oswald:wght@400;500;600;700&family=Open+Sans:ital,wght@0,400;0,600;0,700;1,400&display=swap");
+
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
 
+/* ── CSS design tokens ────────────────────────────────────────────────────── */
+:root {
+  /* Colours */
+  --c-bg:          #080a0f;
+  --c-surface:     #0f1318;
+  --c-card:        #141920;
+  --c-border:      #1e2530;
+  --c-teal:        #00f5d4;
+  --c-teal-dim:    #00c4aa;
+  --c-purple:      #7c3aed;
+  --c-purple-lt:   #a78bfa;
+  --c-indigo:      #6366f1;
+  --c-text:        #d4dce8;
+  --c-muted:       #4a5568;
+
+  /* Gradients */
+  --g-hero:        linear-gradient(135deg, #080a0f 0%, #0d1017 60%, #0f1318 100%);
+  --g-teal-purple: linear-gradient(135deg, var(--c-teal) 0%, var(--c-purple) 100%);
+  --g-card-shine:  linear-gradient(135deg, rgba(255,255,255,0.04) 0%, transparent 60%);
+
+  /* Glow shadows */
+  --s-teal:        0 0 24px 4px rgba(0,245,212,0.25);
+  --s-purple:      0 0 24px 4px rgba(124,58,237,0.30);
+  --s-indigo:      0 0 20px 3px rgba(99,102,241,0.28);
+
+  /* Timing */
+  --ease-out-expo: cubic-bezier(0.16, 1, 0.3, 1);
+  --ease-spring:   cubic-bezier(0.34, 1.56, 0.64, 1);
+}
+
+/* ── Base reset ───────────────────────────────────────────────────────────── */
 html {
   scroll-behavior: smooth;
+  background: var(--c-bg);
 }
 
 body {
-  background-color: #0a0a0f;
-  color: #e2e8f0;
-  font-family: "Inter", sans-serif;
+  background: var(--c-bg);
+  color: var(--c-text);
+  font-family: "Open Sans", sans-serif;
   overflow-x: hidden;
+  -webkit-font-smoothing: antialiased;
 }
 
+/* ── Selection ────────────────────────────────────────────────────────────── */
 ::selection {
-  background: #6366f1;
-  color: #fff;
+  background: var(--c-teal);
+  color: var(--c-bg);
 }
 
-::-webkit-scrollbar {
-  width: 6px;
-}
-::-webkit-scrollbar-track {
-  background: #0a0a0f;
-}
+/* ── Custom scrollbar ─────────────────────────────────────────────────────── */
+::-webkit-scrollbar       { width: 5px; }
+::-webkit-scrollbar-track { background: var(--c-bg); }
 ::-webkit-scrollbar-thumb {
-  background: #6366f1;
-  border-radius: 3px;
+  background: var(--c-teal-dim);
+  border-radius: 4px;
+}
+::-webkit-scrollbar-thumb:hover { background: var(--c-teal); }
+
+/* ── Typography utilities ─────────────────────────────────────────────────── */
+@layer components {
+  /* Display heading — Bebas Neue (loud, attention-grabbing) */
+  .heading-display {
+    font-family: "Bebas Neue", "Oswald", sans-serif;
+    letter-spacing: 0.05em;
+    line-height: 1;
+    font-weight: 400; /* Bebas Neue is single-weight */
+  }
+
+  /* Accent sub-heading — Oswald bold condensed */
+  .accent-serif {
+    font-family: "Oswald", sans-serif;
+    font-style: normal;
+    font-weight: 600;
+    letter-spacing: 0.03em;
+    text-transform: uppercase;
+  }
+
+  /* Body / label utility — Open Sans */
+  .text-mono {
+    font-family: "Open Sans", sans-serif;
+    font-weight: 400;
+  }
+
+  /* Section heading pattern */
+  .section-heading {
+    @apply heading-display text-5xl md:text-6xl text-white;
+  }
+
+  /* Teal gradient text */
+  .text-gradient-teal {
+    background: var(--g-teal-purple);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    background-clip: text;
+  }
+
+  /* ── Button variants ──────────────────────────────────────────────────── */
+  /* Primary — solid teal */
+  .btn-primary {
+    @apply inline-flex items-center gap-2 px-6 py-2.5 rounded-sm
+           font-sans text-sm font-bold tracking-widest uppercase
+           bg-teal text-dark transition-all duration-200;
+    box-shadow: var(--s-teal);
+  }
+  .btn-primary:hover {
+    background: var(--c-teal-dim);
+    box-shadow: 0 0 36px 8px rgba(0,245,212,0.35);
+    transform: translateY(-1px);
+  }
+
+  /* Ghost — teal outline */
+  .btn-ghost {
+    @apply inline-flex items-center gap-2 px-6 py-2.5 rounded-sm
+           font-sans text-sm font-bold tracking-widest uppercase
+           border text-teal transition-all duration-200;
+    border-color: var(--c-teal);
+  }
+  .btn-ghost:hover {
+    background: rgba(0,245,212,0.08);
+    box-shadow: var(--s-teal);
+    transform: translateY(-1px);
+  }
+
+  /* Subtle — muted border */
+  .btn-subtle {
+    @apply inline-flex items-center gap-2 px-5 py-2 rounded-sm
+           font-sans text-xs font-bold tracking-widest uppercase
+           border transition-all duration-200;
+    border-color: var(--c-border);
+    color: var(--c-muted);
+  }
+  .btn-subtle:hover {
+    border-color: var(--c-teal);
+    color: var(--c-teal);
+  }
+
+  /* ── Card base ────────────────────────────────────────────────────────── */
+  .card {
+    background: var(--c-card);
+    border: 1px solid var(--c-border);
+    border-radius: 4px;
+    box-shadow: var(--card, 0 4px 32px rgba(0,0,0,0.55));
+    position: relative;
+    overflow: hidden;
+  }
+  .card::before {
+    content: "";
+    position: absolute;
+    inset: 0;
+    background: var(--g-card-shine);
+    pointer-events: none;
+  }
+
+  /* ── Form inputs ──────────────────────────────────────────────────────── */
+  .input-field {
+    @apply w-full px-4 py-3 font-sans text-sm text-white rounded-sm outline-none transition-all duration-200;
+    background: var(--c-surface);
+    border: 1px solid var(--c-border);
+  }
+  .input-field::placeholder {
+    color: var(--c-muted);
+  }
+  .input-field:focus {
+    border-color: var(--c-teal);
+    box-shadow: 0 0 0 2px rgba(0,245,212,0.12);
+  }
+
+  /* ── Stat card ────────────────────────────────────────────────────────── */
+  .stat-card {
+    @apply card p-5 flex flex-col gap-1;
+  }
+  .stat-value {
+    @apply heading-display text-4xl text-gradient-teal;
+  }
+  .stat-label {
+    @apply font-sans text-xs uppercase tracking-widest;
+    color: var(--c-muted);
+  }
+
+  /* ── Section divider ──────────────────────────────────────────────────── */
+  .section-divider {
+    @apply flex items-center gap-4 mb-12;
+  }
+  .section-divider::before,
+  .section-divider::after {
+    content: "";
+    @apply flex-1 h-px;
+    background: linear-gradient(90deg, transparent, var(--c-border), transparent);
+  }
+}
+
+/* ── Reduced motion ───────────────────────────────────────────────────────── */
+@media (prefers-reduced-motion: reduce) {
+  *, *::before, *::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+    scroll-behavior: auto !important;
+  }
 }
