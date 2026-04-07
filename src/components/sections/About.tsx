@@ -95,59 +95,101 @@ export default function About() {
           </motion.div>
         </div>
 
-        {/* Right Side: Circular Profile Image */}
+        {/* Right Side: Circular Profile Image with Neon Effects */}
         <motion.div 
           className="flex-shrink-0 flex items-center justify-center w-full md:w-auto"
           variants={fadeUp} custom={5} initial="hidden" whileInView="visible" viewport={{ once: true }}
         >
-          <div className="relative w-64 h-64 md:w-[340px] md:h-[340px] group">
-            {/* Subtle outer glowing blob */}
-            <div
-              className="absolute -inset-4 rounded-full opacity-60 group-hover:opacity-100 transition-opacity duration-700 blur-xl pointer-events-none"
+          <div className="relative w-64 h-64 md:w-[380px] md:h-[380px] group transition-all duration-700">
+            {/* 1. Breathing Pulsing Outer Glow */}
+            <motion.div
+              className="absolute -inset-10 rounded-full opacity-30 pointer-events-none blur-3xl"
+              animate={{ 
+                scale: [1, 1.2, 1],
+                opacity: [0.2, 0.4, 0.2]
+              }}
+              transition={{ duration: 4, repeat: Infinity, ease: "easeInOut" }}
               style={{
-                background: "radial-gradient(circle, rgba(0,245,212,0.15) 0%, rgba(124,58,237,0.15) 100%)",
+                background: "radial-gradient(circle, var(--c-teal) 0%, var(--c-purple) 70%, transparent 100%)",
               }}
             />
             
-            {/* Spinning decorative ring */}
+            {/* 2. Glassy Background Layer */}
+            <div className="absolute inset-0 rounded-full bg-white/[0.02] backdrop-blur-3xl border border-white/10 shadow-2xl transition-all duration-500 group-hover:bg-white/[0.05] group-hover:border-white/20" />
+
+            {/* 3. Orbiting Particles */}
+            <div className="absolute inset-[-20px] pointer-events-none">
+              {[...Array(3)].map((_, i) => (
+                <motion.div
+                  key={i}
+                  className="absolute w-2 h-2 rounded-full bg-teal shadow-[0_0_15px_var(--c-teal)]"
+                  animate={{ 
+                    rotate: 360,
+                    scale: [1, 1.5, 1],
+                  }}
+                  transition={{ 
+                    rotate: { duration: 8 + i * 2, repeat: Infinity, ease: "linear" },
+                    scale: { duration: 2, repeat: Infinity, ease: "easeInOut" }
+                  }}
+                  style={{
+                    top: "50%",
+                    left: "50%",
+                    transformOrigin: `${110 + i * 25}px 0`,
+                  }}
+                />
+              ))}
+            </div>
+
+            {/* 4. Main Conic Rotating Ring (Now Deep Black/Dark Grey) */}
             <div
-              className="absolute inset-0 rounded-full animate-spin-slow"
+              className="absolute inset-[10px] rounded-full transition-all duration-1000 animate-spin-slow group-hover:[animation-duration:12s] group-hover:scale-105 group-hover:blur-[1px]"
               style={{
-                background: "conic-gradient(var(--c-teal), var(--c-purple), var(--c-teal))",
-                padding: "3px",
+                background: "conic-gradient(from 0deg, transparent, #0a0a0a, #1a1a1a, #0a0a0a, transparent)",
+                padding: "4px",
+                maskImage: "radial-gradient(circle, transparent 66%, black 67%)",
+                WebkitMaskImage: "radial-gradient(circle, transparent 66%, black 67%)",
               }}
             />
+
+            {/* 5. Inner Secondary Glow Ring */}
+            <div
+              className="absolute inset-[18px] rounded-full border border-teal/20 blur-[1px] opacity-50 group-hover:opacity-100 group-hover:border-teal/50 transition-all duration-500"
+            />
             
-            {/* The Image Container - NOW INTERACTIVE */}
+            {/* 6. The Profile Image Container */}
             <label
-              className="absolute inset-[4px] rounded-full overflow-hidden flex items-center justify-center bg-gray-900 group-hover:scale-[0.98] transition-transform duration-500 ease-out cursor-pointer group/inner"
+              className="absolute inset-[24px] rounded-full overflow-hidden flex items-center justify-center bg-gray-950 shadow-inner cursor-pointer group/inner transition-all duration-500 group-hover:scale-[0.97]"
               style={{ background: "var(--c-card)" }}
             >
               <input type="file" accept="image/*" className="hidden" onChange={handleAvatarUpload} />
               
-              {/* Hover Overlay */}
-              <div className="absolute inset-0 bg-black/60 opacity-0 group-hover/inner:opacity-100 transition-opacity flex flex-col items-center justify-center z-20 text-sm font-sans tracking-widest uppercase text-white/90 font-bold">
-                <span className="text-3xl mb-2">📸</span>
-                Upload
+              {/* Image Reveal Layer */}
+              <div className="absolute inset-0 bg-gradient-to-t from-black/40 to-transparent opacity-60 z-10" />
+
+              {/* Upload Hover Overlay */}
+              <div className="absolute inset-0 bg-black/70 opacity-0 group-hover/inner:opacity-100 transition-opacity flex flex-col items-center justify-center z-30 text-[10px] font-sans tracking-[0.3em] uppercase text-white/90 font-bold backdrop-blur-sm">
+                <span className="text-3xl mb-3 animate-pulse">📸</span>
+                Update Avatar
               </div>
 
               <img 
                 src={uploadedAvatar || PROFILE_IMAGE_URL}
-                alt="Profile of Nakulan" 
-                className="w-full h-full object-cover relative z-10" 
+                alt="Nakulan's Profile" 
+                className="w-full h-full object-cover relative z-10 transition-transform duration-700 group-hover:scale-110" 
               />
             </label>
             
-            {/* Floating decorative badge */}
+            {/* 7. Floating Tech Badge */}
             <motion.div 
-              className="absolute -bottom-2 -left-2 bg-gray-900/80 backdrop-blur-md border border-teal-500/30 rounded-2xl p-4 shadow-xl z-10"
-              initial={{ y: 0 }}
-              animate={{ y: [0, -10, 0] }}
-              transition={{ duration: 4, repeat: Infinity, ease: "easeInOut" }}
+              className="absolute -bottom-4 -right-4 bg-[#0a0a0a]/90 backdrop-blur-xl border border-teal-500/40 rounded-2xl p-4 shadow-[0_0_30px_rgba(0,245,212,0.2)] z-30"
+              animate={{ y: [0, -12, 0], rotate: [0, 5, 0] }}
+              transition={{ duration: 5, repeat: Infinity, ease: "easeInOut" }}
             >
-              <span className="text-2xl">🚀</span>
+              <div className="flex items-center gap-3">
+                <div className="w-2 h-2 rounded-full bg-teal animate-pulse shadow-[0_0_10px_var(--c-teal)]" />
+                <span className="text-[10px] font-bold tracking-[0.2em] text-white uppercase">Active</span>
+              </div>
             </motion.div>
-
           </div>
         </motion.div>
 
