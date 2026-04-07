@@ -99,6 +99,7 @@ body {
     -webkit-background-clip: text;
     -webkit-text-fill-color: transparent;
     background-clip: text;
+    padding-right: 0.15em; /* Prevents right-edge cutoff on italic fonts */
   }
 
   /* ── Button variants ──────────────────────────────────────────────────── */
