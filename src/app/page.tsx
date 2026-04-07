@@ -5,6 +5,7 @@ import { AnimatePresence } from "framer-motion";
 import Navbar from "@/components/Navbar";
 import Hero from "@/components/sections/Hero";
 import About from "@/components/sections/About";
+import Studies from "@/components/sections/Studies";
 import Skills from "@/components/sections/Skills";
 import Projects from "@/components/sections/Projects";
 import Achievements from "@/components/sections/Achievements";
@@ -25,6 +26,7 @@ export default function Home() {
       <main>
         <Hero />
         <About />
+        <Studies />
         <Skills />
         <Projects />
         <Achievements />

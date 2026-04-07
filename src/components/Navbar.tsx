@@ -2,7 +2,7 @@
 import { useState, useEffect } from "react";
 import { motion } from "framer-motion";
 
-const LINKS = ["About", "Skills", "Projects", "Achievements", "Contact"];
+const LINKS = ["About", "Studies", "Skills", "Projects", "Achievements", "Contact"];
 
 export default function Navbar() {
   const [mounted, setMounted] = useState(false);
