@@ -9,6 +9,7 @@ import Studies from "@/components/sections/Studies";
 import Skills from "@/components/sections/Skills";
 import Projects from "@/components/sections/Projects";
 import Achievements from "@/components/sections/Achievements";
+import Certifications from "@/components/sections/Certifications";
 import Contact from "@/components/sections/Contact";
 import Footer from "@/components/Footer";
 import Loader from "@/components/Loader";
@@ -30,6 +31,7 @@ export default function Home() {
         <Skills />
         <Projects />
         <Achievements />
+        <Certifications />
         <Contact />
       </main>
       <Footer />

@@ -1,9 +1,11 @@
 "use client";
 
+import { Icon } from "@iconify/react";
+
 const SOCIALS = [
-  { label: "GitHub",   href: "https://github.com/NAKULAN727",                          icon: "⌥" },
-  { label: "LinkedIn", href: "https://www.linkedin.com/in/nakulan-s-v-4b5093315/",    icon: "in" },
-  { label: "Email",    href: "mailto:nakulan07022007@gmail.com",                       icon: "@" },
+  { label: "GitHub",   href: "https://github.com/NAKULAN727",                          icon: "mdi:github",   hoverColor: "hover:text-white" },
+  { label: "LinkedIn", href: "https://www.linkedin.com/in/nakulan-s-v-4b5093315/",    icon: "mdi:linkedin", hoverColor: "hover:text-[#0A66C2]" },
+  { label: "Email",    href: "mailto:nakulan07022007@gmail.com",                       icon: "mdi:email",    hoverColor: "hover:text-[#EA4335]" },
 ];
 
 export default function Footer() {
@@ -26,10 +28,9 @@ export default function Footer() {
               target="_blank"
               rel="noopener noreferrer"
               aria-label={s.label}
-              className="font-mono text-xs text-muted hover:text-teal transition-colors duration-200
-                         tracking-widest uppercase"
+              className={`text-muted transition-colors duration-200 ${s.hoverColor}`}
             >
-              {s.icon} {s.label}
+              <Icon icon={s.icon} className="w-6 h-6 transform hover:scale-110 transition-transform" />
             </a>
           ))}
         </div>

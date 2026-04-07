@@ -1,8 +1,7 @@
 "use client";
 import { useState, useEffect } from "react";
 import { motion } from "framer-motion";
-
-const LINKS = ["About", "Studies", "Skills", "Projects", "Achievements", "Contact"];
+const LINKS = ["About", "Studies", "Skills", "Projects", "Achievements", "Certifications", "Contact"];
 
 export default function Navbar() {
   const [mounted, setMounted] = useState(false);
@@ -37,8 +36,16 @@ export default function Navbar() {
       transition={{ duration: 0.55, ease: [0.16, 1, 0.3, 1] }}
     >
       {/* Logo */}
-      <a href="#hero" className="heading-display text-2xl text-teal tracking-widest">
-        NAK<span className="text-white">ULAN</span>
+      <a href="#hero" className="flex items-center transition-transform hover:scale-105 duration-300">
+        <img 
+          src="/logo.png" 
+          alt="SVN Logo" 
+          className="h-16 scale-150 w-auto object-contain mix-blend-screen origin-left" 
+          style={{ 
+            maskImage: "radial-gradient(circle, black 30%, transparent 65%)",
+            WebkitMaskImage: "radial-gradient(circle, black 30%, transparent 65%)"
+          }}
+        />
       </a>
 
       {/* Links */}
