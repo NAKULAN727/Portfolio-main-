@@ -158,16 +158,22 @@ export default function About() {
             
             {/* 6. The Profile Image Container */}
             <label
-              className="absolute inset-[24px] rounded-full overflow-hidden flex items-center justify-center bg-gray-950 shadow-inner cursor-pointer group/inner transition-all duration-500 group-hover:scale-[0.97]"
-              style={{ background: "var(--c-card)" }}
+              className="absolute inset-[24px] cursor-pointer group/inner transition-all duration-500 group-hover:scale-[0.97] rounded-full isolate"
+              style={{
+                background: "var(--c-card)",
+                overflow: "hidden",
+                maskImage: "radial-gradient(white, black)",
+                WebkitMaskImage: "-webkit-radial-gradient(white, black)",
+                borderRadius: "50%"
+              }}
             >
               <input type="file" accept="image/*" className="hidden" onChange={handleAvatarUpload} />
               
               {/* Image Reveal Layer */}
-              <div className="absolute inset-0 bg-gradient-to-t from-black/40 to-transparent opacity-60 z-10" />
+              <div className="absolute inset-0 bg-gradient-to-t from-black/50 to-transparent opacity-70 z-20 pointer-events-none" />
 
               {/* Upload Hover Overlay */}
-              <div className="absolute inset-0 bg-black/70 opacity-0 group-hover/inner:opacity-100 transition-opacity flex flex-col items-center justify-center z-30 text-[10px] font-sans tracking-[0.3em] uppercase text-white/90 font-bold backdrop-blur-sm">
+              <div className="absolute inset-0 bg-black/70 opacity-0 group-hover/inner:opacity-100 transition-opacity flex flex-col items-center justify-center z-30 text-[10px] font-sans tracking-[0.3em] uppercase text-white/90 font-bold backdrop-blur-sm pointer-events-none">
                 <span className="text-3xl mb-3 animate-pulse">📸</span>
                 Update Avatar
               </div>
@@ -175,7 +181,8 @@ export default function About() {
               <img 
                 src={uploadedAvatar || PROFILE_IMAGE_URL}
                 alt="Nakulan's Profile" 
-                className="w-full h-full object-cover relative z-10 transition-transform duration-700 group-hover:scale-110" 
+                className="w-full h-full object-cover relative z-10 transition-transform duration-700 group-hover:scale-110"
+                style={{ borderRadius: "50%" }}
               />
             </label>
             
