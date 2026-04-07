@@ -1,5 +1,5 @@
 "use client";
-import { useEffect, useRef, useState } from "react";
+import { useEffect, useRef } from "react";
 import dynamic from "next/dynamic";
 import { motion } from "framer-motion";
 import gsap from "gsap";
@@ -8,9 +8,8 @@ import gsap from "gsap";
 // CUSTOMIZE YOUR HERO IMAGE HERE
 // 1. Put your image inside the `public` folder (e.g., public/my-photo.jpg).
 // 2. Change the url below to match your filename (e.g., "/my-photo.jpg").
-// Note: If you leave this empty (""), it will use the default 👨 💻 emojis.
 // =========================================================================
-const HERO_IMAGE_URL = "";
+const HERO_IMAGE_URL = "/first.jpeg";
 
 const ParticleBackground = dynamic(() => import("../three/ParticleBackground"), { ssr: false });
 
@@ -20,32 +19,13 @@ export default function Hero() {
   const metaRef    = useRef<HTMLParagraphElement>(null);
   const ctaRef     = useRef<HTMLDivElement>(null);
 
-  const [uploadedAvatar, setUploadedAvatar] = useState<string | null>(null);
-
   useEffect(() => {
-    // Load any previously uploaded avatar from the browser storage
-    const saved = localStorage.getItem("custom_hero_avatar");
-    if (saved) setUploadedAvatar(saved);
-
     const tl = gsap.timeline({ defaults: { ease: "power3.out" } });
     tl.fromTo(headingRef.current, { y: 80, opacity: 0 }, { y: 0, opacity: 1, duration: 1 })
       .fromTo(metaRef.current,    { y: 30, opacity: 0 }, { y: 0, opacity: 1, duration: 0.7 }, "-=0.5")
       .fromTo(subRef.current,     { y: 30, opacity: 0 }, { y: 0, opacity: 1, duration: 0.7 }, "-=0.4")
       .fromTo(ctaRef.current,     { y: 20, opacity: 0 }, { y: 0, opacity: 1, duration: 0.6 }, "-=0.3");
   }, []);
-
-  const handleAvatarUpload = (e: React.ChangeEvent<HTMLInputElement>) => {
-    const file = e.target.files?.[0];
-    if (file) {
-      const reader = new FileReader();
-      reader.onloadend = () => {
-        const base64String = reader.result as string;
-        setUploadedAvatar(base64String);
-        localStorage.setItem("custom_hero_avatar", base64String); // Save it so it persists on refresh
-      };
-      reader.readAsDataURL(file);
-    }
-  };
 
   return (
     <section
@@ -136,38 +116,17 @@ export default function Hero() {
               }}
             />
 
-            {/* Avatar inner circle - NOW INTERACTIVE */}
-            <label
-              className="absolute inset-[6px] rounded-full overflow-hidden flex items-center justify-center text-7xl md:text-8xl select-none cursor-pointer group"
+            {/* Avatar inner circle - NOW STATIC */}
+            <div
+              className="absolute inset-[6px] rounded-full overflow-hidden flex items-center justify-center text-7xl md:text-8xl select-none group"
               style={{ background: "var(--c-card)" }}
             >
-              <input type="file" accept="image/*" className="hidden" onChange={handleAvatarUpload} />
-              
-              {/* Hover Overlay */}
-              <div className="absolute inset-0 bg-black/60 opacity-0 group-hover:opacity-100 transition-opacity flex flex-col items-center justify-center z-20 text-sm font-sans tracking-widest uppercase text-white/90 font-bold">
-                <span className="text-2xl mb-1">📸</span>
-                Upload
-              </div>
-
-              {uploadedAvatar ? (
-                <img 
-                  src={uploadedAvatar} 
-                  alt="Uploaded Avatar" 
-                  className="w-full h-full object-cover relative z-10" 
-                />
-              ) : HERO_IMAGE_URL ? (
-                <img 
-                  src={HERO_IMAGE_URL} 
-                  alt="Nakulan" 
-                  className="w-full h-full object-cover relative z-10" 
-                />
-              ) : (
-                <span className="flex items-center gap-1 relative z-10">
-                  <span>👨</span>
-                  <span>💻</span>
-                </span>
-              )}
-            </label>
+              <img 
+                src={HERO_IMAGE_URL} 
+                alt="Nakulan" 
+                className="w-full h-full object-cover relative z-10" 
+              />
+            </div>
           </motion.div>
         </motion.div>
       </div>

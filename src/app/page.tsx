@@ -24,7 +24,7 @@ export default function Home() {
       </AnimatePresence>
 
       <Navbar />
-      <main>
+      <main className="overflow-x-hidden w-full">
         <Hero />
         <About />
         <Studies />
