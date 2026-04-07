@@ -253,7 +253,7 @@ export default function Studies() {
         transition={{ duration: 0.5 }}
       >
         <h2 className="section-heading text-center text-4xl md:text-5xl font-bold tracking-tight text-white mb-4">
-          My <span className="text-gradient-teal accent-serif">Education</span>
+          My <span className="text-gradient-teal accent-serif ml-3">Education</span>
         </h2>
         <div className="h-px w-24 mx-auto bg-gradient-to-r from-transparent via-[#8a2be2] to-transparent"></div>
       </motion.div>

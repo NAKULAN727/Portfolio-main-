@@ -43,11 +43,11 @@ export default function About() {
       
       {/* Section Small Heading */}
       <motion.div
-        className="section-divider mb-16"
+        className="section-divider mb-16 text-center"
         variants={fadeUp} initial="hidden" whileInView="visible" viewport={{ once: true }}
       >
-        <h2 className="section-heading">
-          About <span className="text-gradient-teal accent-serif italic">Me</span>
+        <h2 className="section-heading text-4xl md:text-5xl font-bold tracking-tight text-white mb-4">
+          About <span className="text-gradient-teal accent-serif italic pr-2">Me</span>
         </h2>
       </motion.div>
 
