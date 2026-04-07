@@ -1,24 +1,111 @@
 "use client";
-import { useEffect, useState } from "react";
-import { motion } from "framer-motion";
+import { useEffect, useState, useRef, useMemo } from "react";
+import { motion, AnimatePresence } from "framer-motion";
+import { Canvas, useFrame } from "@react-three/fiber";
+import { PerspectiveCamera, Float, MeshDistortMaterial } from "@react-three/drei";
+import * as THREE from "three";
 
 const NAME = "NAKULAN".split("");
+
+function WavyRing({ index, total }: { index: number, total: number }) {
+  const meshRef = useRef<THREE.Mesh>(null);
+  
+  // Phase offset for wave motion
+  const phase = (index / total) * Math.PI * 2;
+
+  useFrame((state) => {
+    if (!meshRef.current) return;
+    const time = state.clock.getElapsedTime();
+    
+    // Complex rotation for weaving effect
+    meshRef.current.rotation.z = time * 0.5 + phase;
+    meshRef.current.rotation.x = Math.sin(time + phase) * 0.3;
+    meshRef.current.rotation.y = Math.cos(time * 0.8 + phase) * 0.2;
+    
+    // Pulsing scale
+    const s = 1 + Math.sin(time * 2 + phase) * 0.05;
+    meshRef.current.scale.set(s, s, s);
+  });
+
+  return (
+    <mesh ref={meshRef}>
+      <torusGeometry args={[2, 0.015, 16, 128]} />
+      <meshStandardMaterial
+        color="#0ea5e9"
+        emissive="#0ea5e9"
+        emissiveIntensity={4}
+        transparent
+        opacity={0.6}
+        toneMapped={false}
+      />
+    </mesh>
+  );
+}
+
+function SwirlObject() {
+  const rings = Array.from({ length: 8 });
+  return (
+    <group>
+      {rings.map((_, i) => (
+        <WavyRing key={i} index={i} total={8} />
+      ))}
+      {/* Central energy glow */}
+      <mesh>
+        <sphereGeometry args={[0.2, 32, 32]} />
+        <meshBasicMaterial color="#7dd3fc" transparent opacity={0.2} />
+      </mesh>
+    </group>
+  );
+}
+
+function Particles() {
+  const count = 40;
+  const mesh = useRef<THREE.Points>(null);
+  
+  const [positions] = useMemo(() => {
+    const pos = new Float32Array(count * 3);
+    for (let i = 0; i < count; i++) {
+      pos[i * 3] = (Math.random() - 0.5) * 15;
+      pos[i * 3 + 1] = (Math.random() - 0.5) * 15;
+      pos[i * 3 + 2] = (Math.random() - 0.5) * 10;
+    }
+    return [pos];
+  }, []);
+
+  useFrame((state) => {
+    if (mesh.current) {
+      mesh.current.rotation.y += 0.0005;
+    }
+  });
+
+  return (
+    <points ref={mesh}>
+      <bufferGeometry>
+        <bufferAttribute
+          attach="attributes-position"
+          count={count}
+          array={positions}
+          itemSize={3}
+          args={[positions, 3]}
+        />
+      </bufferGeometry>
+      <pointsMaterial size={0.02} color="#0ea5e9" transparent opacity={0.3} sizeAttenuation />
+    </points>
+  );
+}
 
 export default function Loader({ onComplete }: { onComplete: () => void }) {
   const [shrinking, setShrinking] = useState(false);
 
   useEffect(() => {
-    // Lock body scroll while loader is active
     document.body.style.overflow = "hidden";
-    
-    // Total wait time = ~2.5s
     const timer = setTimeout(() => {
       setShrinking(true);
       setTimeout(() => {
         document.body.style.overflow = "";
         onComplete();
-      }, 700); // Wait for exit animation to finish
-    }, 2800);
+      }, 900);
+    }, 3800);
 
     return () => {
       clearTimeout(timer);
@@ -27,85 +114,84 @@ export default function Loader({ onComplete }: { onComplete: () => void }) {
   }, [onComplete]);
 
   return (
-    <motion.div
-      className="fixed inset-0 z-[9999] flex flex-col items-center justify-center bg-[#050505] overflow-hidden"
-      initial={{ opacity: 1 }}
-      animate={shrinking ? { opacity: 0, scale: 1.1, filter: "blur(10px)", pointerEvents: "none" } : { opacity: 1, scale: 1, filter: "blur(0px)" }}
-      transition={{ duration: 0.7, ease: "easeInOut" }}
-    >
-      {/* Background Radial Glow */}
-      <div className="absolute inset-0 flex items-center justify-center pointer-events-none">
-        <div className="w-[500px] h-[500px] bg-cyan-500/10 rounded-full blur-[100px]" />
-      </div>
-
-      <div className="relative z-10 flex flex-col items-center justify-center perspective-[1000px]">
-        {/* Floating Glass Cube / Card */}
+    <AnimatePresence mode="wait">
+      {!shrinking && (
         <motion.div
-          className="w-24 h-24 md:w-28 md:h-28 rounded-2xl border border-cyan-400/40 backdrop-blur-xl bg-gradient-to-br from-white/10 to-transparent shadow-[0_0_40px_rgba(6,182,212,0.6)] relative flex items-center justify-center mb-10 overflow-hidden"
-          style={{ transformStyle: "preserve-3d" }}
-          initial={{ opacity: 0, y: 50, scale: 0.5 }}
-          animate={{
-            opacity: 1, 
-            y: [-15, 15, -15],
-            rotateX: [15, -15, 15],
-            rotateY: [-15, 25, -15],
-            scale: 1
-          }}
-          transition={{
-            opacity: { duration: 1 },
-            scale: { duration: 1, ease: "easeOut" },
-            y: { duration: 4, repeat: Infinity, ease: "easeInOut" },
-            rotateX: { duration: 5, repeat: Infinity, ease: "easeInOut" },
-            rotateY: { duration: 6, repeat: Infinity, ease: "easeInOut" }
+          key="loader"
+          className="fixed inset-0 z-[9999] flex flex-col items-center justify-center bg-[#030712] overflow-hidden"
+          initial={{ opacity: 1 }}
+          exit={{ 
+            opacity: 0, 
+            scale: 1.05,
+            transition: { duration: 0.8, ease: "easeIn" }
           }}
         >
-          {/* Inner Glow Center */}
-          <div className="absolute inset-0 m-auto w-14 h-14 bg-cyan-500/30 blur-xl rounded-full" />
-          
-          {/* Edge reflection */}
-          <div className="absolute top-0 left-0 w-full h-1/2 bg-gradient-to-b from-white/20 to-transparent pointer-events-none" />
-          
-          {/* Inner Diamond/Cube */}
-          <motion.div 
-            className="w-8 h-8 bg-cyan-400/80 rounded shadow-[0_0_15px_#06b6d4]"
-            animate={{ rotate: 360 }}
-            transition={{ duration: 10, repeat: Infinity, ease: "linear" }}
-          />
-        </motion.div>
+          {/* Ambient depth */}
+          <div className="absolute inset-0 bg-[radial-gradient(circle_at_center,_rgba(14,165,233,0.04)_0%,_transparent_70%)]" />
 
-        {/* NAKULAN Text */}
-        <div className="flex space-x-2 md:space-x-4 text-3xl md:text-5xl font-black tracking-[0.2em] text-[#e0f2fe] uppercase">
-          {NAME.map((char, i) => (
-            <motion.span
-              key={i}
-              className="inline-block"
-              initial={{ opacity: 0, y: 30 }}
-              animate={{ 
-                opacity: 1, 
-                y: 0,
-                textShadow: [
-                  "0 0 0px rgba(6,182,212,0)", 
-                  "0 0 20px rgba(6,182,212,0.8)", 
-                  "0 0 10px rgba(6,182,212,0.4)"
-                ]
-              }}
-              transition={{
-                y: { duration: 0.6, ease: [0.22, 1, 0.36, 1], delay: i * 0.1 + 0.3 },
-                opacity: { duration: 0.6, ease: "easeOut", delay: i * 0.1 + 0.3 },
-                textShadow: { 
-                  duration: 2, 
-                  repeat: Infinity, 
-                  repeatType: "reverse", 
-                  ease: "easeInOut",
-                  delay: i * 0.1 + 0.8
-                }
-              }}
-            >
-              {char}
-            </motion.span>
-          ))}
-        </div>
-      </div>
-    </motion.div>
+          <div className="relative z-10 flex flex-col items-center justify-center w-full h-full max-w-4xl">
+            {/* Swirl 3D Object Container */}
+            <div className="w-full h-[350px] md:h-[450px] relative mt-[-40px]">
+              <Canvas dpr={[1, 2]} gl={{ antialias: true, alpha: true }}>
+                <PerspectiveCamera makeDefault position={[0, 0, 10]} fov={30} />
+                <ambientLight intensity={0.5} />
+                <pointLight position={[0, 0, 0]} intensity={2} color="#0ea5e9" />
+                
+                <Float speed={2} rotationIntensity={0.5} floatIntensity={0.5}>
+                  <SwirlObject />
+                </Float>
+                <Particles />
+              </Canvas>
+              
+              {/* Blur blend overlay */}
+              <div className="absolute inset-0 m-auto w-48 h-48 bg-sky-500/10 blur-[90px] rounded-full pointer-events-none" />
+            </div>
+
+            {/* NAKULAN Text */}
+            <div className="flex flex-col items-center mt-[-20px]">
+              <div className="flex space-x-3 md:space-x-5 text-4xl md:text-7xl font-black tracking-[0.35em] text-white uppercase drop-shadow-[0_0_20px_rgba(14,165,233,0.3)]">
+                {NAME.map((char, i) => (
+                  <motion.span
+                    key={i}
+                    className="inline-block"
+                    initial={{ opacity: 0, scale: 0.5, filter: "blur(10px)" }}
+                    animate={{ 
+                      opacity: 1, 
+                      scale: 1, 
+                      filter: "blur(0px)",
+                    }}
+                    transition={{
+                      scale: { duration: 0.6, ease: [0.34, 1.56, 0.64, 1], delay: i * 0.08 + 1 },
+                      opacity: { duration: 0.5, delay: i * 0.08 + 1 },
+                      filter: { duration: 0.8, delay: i * 0.08 + 1 },
+                    }}
+                  >
+                    {char}
+                  </motion.span>
+                ))}
+              </div>
+
+              {/* Status bar */}
+              <div className="mt-12 flex flex-col items-center">
+                 <motion.div 
+                    initial={{ width: 0 }}
+                    animate={{ width: "200px" }}
+                    transition={{ delay: 1.8, duration: 2, ease: "easeInOut" }}
+                    className="h-px bg-gradient-to-r from-transparent via-sky-400 to-transparent opacity-40" 
+                 />
+                 <motion.p
+                    initial={{ opacity: 0 }}
+                    animate={{ opacity: 0.5 }}
+                    transition={{ delay: 2.5, duration: 1 }}
+                    className="text-[10px] uppercase tracking-[0.8em] font-bold text-sky-400 mt-4 pl-3"
+                  >
+                    Optimizing Environment
+                  </motion.p>
+              </div>
+            </div>
+          </div>
+        </motion.div>
+      )}
+    </AnimatePresence>
   );
 }

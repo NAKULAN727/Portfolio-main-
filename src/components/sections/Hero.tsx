@@ -114,16 +114,16 @@ export default function Hero() {
         >
           {/* Floating wrapper */}
           <motion.div
-            className="relative w-52 h-52 md:w-64 md:h-64"
+            className="relative w-64 h-64 md:w-80 md:h-80"
             animate={{ y: [0, -14, 0] }}
             transition={{ duration: 4, ease: "easeInOut", repeat: Infinity }}
           >
             {/* Outer neon glow ring — pulsing */}
             <div
-              className="absolute -inset-3 rounded-full animate-pulse-glow pointer-events-none"
+              className="absolute -inset-4 rounded-full animate-pulse-glow pointer-events-none"
               style={{
                 background: "transparent",
-                boxShadow: "0 0 32px 8px rgba(0,245,212,0.3), 0 0 64px 16px rgba(124,58,237,0.15)",
+                boxShadow: "0 0 40px 10px rgba(0,245,212,0.3), 0 0 80px 20px rgba(124,58,237,0.15)",
               }}
             />
 
@@ -132,13 +132,13 @@ export default function Hero() {
               className="absolute inset-0 rounded-full animate-spin-slow"
               style={{
                 background: "conic-gradient(var(--c-teal), var(--c-purple), var(--c-teal))",
-                padding: "3px",
+                padding: "4px",
               }}
             />
 
             {/* Avatar inner circle - NOW INTERACTIVE */}
             <label
-              className="absolute inset-[4px] rounded-full overflow-hidden flex items-center justify-center text-6xl md:text-7xl select-none cursor-pointer group"
+              className="absolute inset-[6px] rounded-full overflow-hidden flex items-center justify-center text-7xl md:text-8xl select-none cursor-pointer group"
               style={{ background: "var(--c-card)" }}
             >
               <input type="file" accept="image/*" className="hidden" onChange={handleAvatarUpload} />

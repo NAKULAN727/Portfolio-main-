@@ -15,7 +15,7 @@ export default function Footer() {
     >
       <div className="max-w-5xl mx-auto flex flex-col md:flex-row items-center justify-between gap-4">
         <p className="font-mono text-xs text-muted tracking-widest uppercase">
-          © {year} <span className="text-teal">Nakulan</span> — Built with Next.js · Three.js · GSAP
+          © {year} <span className="text-teal">Nakulan</span>
         </p>
 
         <div className="flex gap-6">
